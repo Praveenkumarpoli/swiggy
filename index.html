@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Order Summary</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #6f0f0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh; /* Center vertically */
+            margin: 0;
+        }
+        #inputs {
+            width: 60%;
+            background-color: azure;
+            box-shadow: 2px red;
+            border-radius: 5px;
+        }
+        #buttons {
+            color: white;
+            background-color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            filter: invert(100%);
+        }
+        .container {
+            max-width: 400px; /* Adjusted for better responsiveness */
+            width: 100%; /* Make it responsive */
+            border: 1px solid #ccc;
+            padding: 20px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            border-radius: 8px; /* Slightly rounded corners */
+        }
+        .restaurant-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .restaurant-details {
+            margin-left: 10px;
+        }
+        .restaurant-name {
+            font-weight: bold;
+        }
+        .blur-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: -1;
+        }
+        .item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .quantity {
+            display: flex;
+            align-items: center;
+        }
+        .quantity button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .bill-details {
+            margin-top: 20px;
+        }
+        .bill-details .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .restaurant-image {
+            width: 50px;
+            height: auto;
+            border-radius: 10px;
+        }
+        .additional-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .new-container {
+            background-color: #f0f8ff;
+            border: 1px solid #cce5ff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            filter: blur(0.5px);
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-container input {
+            margin-right: 5px;
+        }
+        .special-instructions {
+            margin-top: 10px;
+        }
+        .special-instructions input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            #inputs {
+                width: 80%; /* Wider on mobile */
+            }
+            .container {
+                max-width: 90%; /* Full width on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const createOrderSummary = () => {
+            const container = document.createElement('div');
+            container.classList.add('container');
+
+            // Restaurant Info Section
+            const restaurantInfo = document.createElement('div');
+            restaurantInfo.classList.add('restaurant-info');
+
+            const restaurantImage = document.createElement('img');
+            restaurantImage.src = 'kkr.jpeg';
+            restaurantImage.alt = 'Restaurant Image';
+            restaurantImage.classList.add('restaurant-image');
+            restaurantInfo.appendChild(restaurantImage);
+
+            const restaurantDetails = document.createElement('div');
+            restaurantDetails.classList.add('restaurant-details');
+
+            const restaurantName = document.createElement('div');
+            restaurantName.classList.add('restaurant-name');
+            restaurantName.innerText = 'Champaran Handi Restaurant';
+            restaurantDetails.appendChild(restaurantName);
+
+            const restaurantAddress = document.createElement('div');
+            restaurantAddress.innerText = 'Nagpur road';
+            restaurantDetails.appendChild(restaurantAddress);
+
+            restaurantInfo.appendChild(restaurantDetails);
+            container.appendChild(restaurantInfo);
+
+            // Blur Background Effect
+            const blurBackground = document.createElement('div');
+            blurBackground.classList.add('blur-background');
+            restaurantInfo.appendChild(blurBackground);
+
+            // Item Section
+            const itemContainer = document.createElement('div');
+            itemContainer.classList.add('item');
+
+            const vegLogo = document.createElement('img');
+            vegLogo.src = 'https://www.shutterstock.com/image-illustration/pure-veg-icon-logo-symbol-260nw-2190482501.jpg';
+            vegLogo.alt = 'Veg Logo';
+            vegLogo.style.width = '20px';
+            vegLogo.style.marginRight = '5px';
+
+            const itemLabel = document.createElement('div');
+            itemLabel.style.display = 'flex';
+            itemLabel.style.alignItems = 'center';
+            itemLabel.appendChild(vegLogo);
+
+            const itemName = document.createElement('span');
+            itemName.innerText = 'Aloo Jeera';
+            itemLabel.appendChild(itemName);
+
+            itemContainer.appendChild(itemLabel);
+
+            const quantityDiv = document.createElement('div');
+            quantityDiv.classList.add('quantity');
+
+            const minusButton = document.createElement('button');
+            minusButton.classList.add('minus');
+            minusButton.innerText = '-';
+            quantityDiv.appendChild(minusButton);
+
+            const quantityValue = document.createElement('span');
+            quantityValue.classList.add('quantity-value');
+            quantityValue.innerText = '1';
+            quantityDiv.appendChild(quantityValue);
+
+            const plusButton = document.createElement('button');
+            plusButton.classList.add('plus');
+            plusButton.innerText = '+';
+            quantityDiv.appendChild(plusButton);
+
+            itemContainer.appendChild(quantityDiv);
+            const price = document.createElement('div');
+            price.classList.add('price');
+            price.innerText = '₹155';
+            itemContainer.appendChild(price);
+            container.appendChild(itemContainer);
+            // Special Instructions Input
+            const specialInstructionsContainer = document.createElement('div');
+            specialInstructionsContainer.classList.add('special-instructions');
+            const specialInstructionsInput = document.createElement('input');
+            specialInstructionsInput.type = 'text';
+            specialInstructionsInput.placeholder = 'Special Instructions (e.g. extra spicy)';
+            specialInstructionsContainer.appendChild(specialInstructionsInput);
+            container.appendChild(specialInstructionsContainer);
+
+            // New Container Below the Special Instructions
+            const newContainer = document.createElement('div');
+            newContainer.classList.add('new-container');
+
+            const checkboxContainer = document.createElement('div');
+            checkboxContainer.classList.add('checkbox-container');
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'thankYouCheckbox';
+
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.innerText = 'Opt in for No-contact Delivery ';
+
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(checkboxLabel);
+            newContainer.appendChild(checkboxContainer);
+            newContainer.appendChild(document.createTextNode('unwell,or avoiding contact? Please select no-contact delivery. Partner will safely place the order outside your door (not for COD)'));
+
+            container.appendChild(newContainer);
+
+            // Bill Details
+            const billDetails = document.createElement('div');
+            billDetails.classList.add('bill-details');
+            const details = [
+                { label: 'Item Total', amount: '₹155' },
+                { label: 'Delivery partner fee', amount: '₹74' },
+                { label: 'Delivery Tip', amount: 'Add tip' },
+                { label: 'Platform fee', amount: '₹6' },
+                { label: 'GST and Restaurant Charges', amount: '₹8.83' },
+            ];
+
+            for (let i = 0; i < details.length; i++) {
+                const row = document.createElement('div');
+                row.classList.add('row');
+                const label = document.createElement('div');
+                label.innerText = details[i].label;
+                row.appendChild(label);
+                const amount = document.createElement('div');
+                amount.innerText = details[i].amount;
+                row.appendChild(amount);
+                billDetails.appendChild(row);
+            }
+
+            const totalRow = document.createElement('div');
+            totalRow.classList.add('row', 'total');
+            const totalLabel = document.createElement('div');
+            totalLabel.innerText = 'TO PAY';
+            totalRow.appendChild(totalLabel);
+            const totalAmount = document.createElement('div');
+            totalAmount.innerText = '₹244'; // Initial value; will update later
+            totalRow.appendChild(totalAmount);
+            billDetails.appendChild(totalRow);
+
+            container.appendChild(billDetails);
+            document.body.appendChild(container);
+
+            // for quantity buttons
+            const calculateTotal = (itemQuantity) => {
+                const basePrice = 155;
+                const deliveryFee = 74;
+                const platformFee = 6;
+                const gstPercentage = 0.05; // 5% GST
+
+                // Tiered pricing logic
+                let itemPrice;
+                if (itemQuantity <= 3) {
+                    itemPrice = basePrice;
+                } else if (itemQuantity <= 6) {
+                    itemPrice = basePrice * 0.9; // 10% discount for 4-6 items
+                } else {
+                    itemPrice = basePrice * 0.8; // 20% discount for 7 or more items
+                }
+
+                const itemTotal = itemPrice * itemQuantity;
+                const gstCharges = itemTotal * gstPercentage;
+                const total = itemTotal + deliveryFee + platformFee + gstCharges;
+
+                return {
+                    itemTotal: itemTotal.toFixed(2),
+                    gstCharges: gstCharges.toFixed(2),
+                    total: total.toFixed(2)
+                };
+            };
+
+            const updateTotal = () => {
+                const quantity = parseInt(quantityValue.innerText);
+                const { itemTotal, gstCharges, total } = calculateTotal(quantity);
+
+                details[0].amount = `₹${itemTotal}`;
+                details[4].amount = `₹${gstCharges}`;
+
+                // Update the displayed amounts
+                billDetails.childNodes.forEach((row, index) => {
+                    if (index < details.length) {
+                        row.childNodes[1].innerText = details[index].amount;
+                    }
+                });
+        //         for (let i = 0; i < billDetails.childNodes.length; i++) {
+        //              if (i < details.length) {
+        //  billDetails.childNodes[i].childNodes[1].innerText = details[i].amount;
+        //     }
+        //         }
+                totalAmount.innerText = `₹${total}`;
+            };
+
+            minusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityValue.innerText);
+                if (currentValue > 1) {
+                    quantityValue.innerText = currentValue - 1;
+                    updateTotal();
+                }
+            });
+
+            plusButton.addEventListener('click', () => {
+                let currentValue = parseInt(quantityValue.innerText);
+                quantityValue.innerText = currentValue + 1;
+                updateTotal();
+            });
+
+            // Initialize total on page load
+            updateTotal();
+        };
+
+        // Call the function to create the order summary
+        createOrderSummary();
+
+        function speak() {
+            var text = document.getElementById('inputs').value;
+            var utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+    <div>
+        <div>It can speak what you typed</div>
+        <input id="inputs">
+        <button id="buttons" onclick="speak()">speak</button>
+    </div>
+</body>
+</html>
